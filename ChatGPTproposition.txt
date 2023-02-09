@@ -1,0 +1,31 @@
+from gurobipy import *
+
+# Define the model
+m = Model("UAV Aided WSN Optimization")
+
+# Create decision variables
+t_hover = m.addVar(vtype=GRB.CONTINUOUS, name="t_hover")
+t_travel = m.addVar(vtype=GRB.CONTINUOUS, name="t_travel")
+e_hover = m.addVar(vtype=GRB.CONTINUOUS, name="e_hover")
+e_travel = m.addVar(vtype=GRB.CONTINUOUS, name="e_travel")
+lambda_ = m.addVar(vtype=GRB.CONTINUOUS, lb=0, ub=1, name="lambda")
+
+# Define objectives
+obj_time = t_hover + t_travel
+obj_energy = e_hover + e_travel
+
+# Set weights
+w_time = lambda_
+w_energy = 1 - lambda_
+
+# Formulate the weighted sum
+obj = w_time * obj_time + w_energy * obj_energy
+
+# Set the objective function
+m.setObjective(obj, GRB.MINIMIZE)
+
+# Add constraints
+# ...
+
+# Solve the model
+m.optimize()
